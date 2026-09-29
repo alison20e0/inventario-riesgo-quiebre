@@ -1,0 +1,29 @@
+{
+  "name": "inventario-riesgo-quiebre",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "backend",
+  "workspaceFolder": "/workspace",
+  "shutdownAction": "stopCompose",
+  "forwardPorts": [8080, 5432, 5672, 15672],
+  "portsAttributes": {
+    "8080": { "label": "application" },
+    "5432": { "label": "postgres" },
+    "5672": { "label": "rabbitmq-amqp" },
+    "15672": { "label": "rabbitmq-management" }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "vscjava.vscode-java-pack",
+        "vmware.vscode-boot-dev-pack",
+        "mtxr.sqltools",
+        "mtxr.sqltools-driver-pg",
+        "ms-azuretools.vscode-docker"
+      ],
+      "settings": {
+        "java.configuration.updateBuildConfiguration": "automatic"
+      }
+    }
+  },
+  "remoteUser": "spring"
+}
