@@ -9,13 +9,19 @@ services:
       - "8080:8080"
     environment:
       SPRING_PROFILES_ACTIVE: docker
+      SERVER_PORT: "8080"
       DB_HOST: postgres
       DB_PORT: "5432"
-      DB_NAME: inventario_db
-      DB_USER: ${DB_USER:-admin}
-      DB_PASSWORD: ${DB_PASSWORD:-secretpassword123}
+      DB_NAME: ${DB_NAME:-inventario_db}
+      DB_USER: ${DB_USER:-inventario}
+      DB_PASSWORD: ${DB_PASSWORD:-inventario_dev_password}
       RABBITMQ_HOST: rabbitmq
       RABBITMQ_PORT: "5672"
+      RABBITMQ_USER: ${RABBITMQ_USER:-inventario}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:-inventario_dev_password}
+      PRONOSTICO_SIMULAR_FALLO: ${PRONOSTICO_SIMULAR_FALLO:-false}
+      COMPRAS_SIMULAR_FALLO: ${COMPRAS_SIMULAR_FALLO:-false}
+      APP_SEED_EJEMPLO: ${APP_SEED_EJEMPLO:-true}
     depends_on:
       postgres:
         condition: service_healthy
@@ -23,40 +29,42 @@ services:
         condition: service_healthy
 
   postgres:
-    image: postgres:15-alpine
+    image: postgres:16-alpine
     container_name: inventario-postgres
     restart: unless-stopped
     ports:
-      - "5432:5432"
+      - "5441:5432"
     environment:
-      POSTGRES_DB: inventario_db
-      POSTGRES_USER: ${DB_USER:-admin}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-secretpassword123}
+      POSTGRES_DB: ${DB_NAME:-inventario_db}
+      POSTGRES_USER: ${DB_USER:-inventario}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-inventario_dev_password}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-admin} -d inventario_db"]
-      interval: 10s
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-inventario} -d ${DB_NAME:-inventario_db}"]
+      interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 12
+      start_period: 10s
 
   rabbitmq:
-    image: rabbitmq:3-management-alpine
+    image: rabbitmq:3.13-management-alpine
     container_name: inventario-rabbitmq
     restart: unless-stopped
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - "5671:5672"
+      - "15671:15672"
     environment:
-      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-admin}
-      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-secretpassword123}
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-inventario}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-inventario_dev_password}
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
-      interval: 10s
+      interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 12
+      start_period: 15s
 
 volumes:
   postgres_data:

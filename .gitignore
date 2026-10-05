@@ -7,7 +7,6 @@
 target/
 *.jar
 *.war
-!.mvn/wrapper/maven-wrapper.jar
 
 # Node
 node_modules/

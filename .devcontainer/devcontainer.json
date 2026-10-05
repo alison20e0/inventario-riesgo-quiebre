@@ -4,12 +4,12 @@
   "service": "backend",
   "workspaceFolder": "/workspace",
   "shutdownAction": "stopCompose",
-  "forwardPorts": [8080, 5432, 5672, 15672],
+  "forwardPorts": [8080, 5441, 5671, 15671],
   "portsAttributes": {
     "8080": { "label": "application" },
-    "5432": { "label": "postgres" },
-    "5672": { "label": "rabbitmq-amqp" },
-    "15672": { "label": "rabbitmq-management" }
+    "5441": { "label": "postgres" },
+    "5671": { "label": "rabbitmq-amqp" },
+    "15671": { "label": "rabbitmq-management" }
   },
   "customizations": {
     "vscode": {
